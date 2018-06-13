@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用户修改页面</title>
+</head>
+<body>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            &times;
+        </button>
+        <h4 class="modal-title" id="myModalLabel">用户信息编辑</h4>
+    </div>
+
+    <div class="modal-body no-padding">
+
+        <form th:action="@{security/user/save}" id="data-form" method="post" th:object="${dto}" class="smart-form">
+            <input id="id" type="hidden" name="id" th:value="*{id}">
+            <input id="createDate" type="hidden" name="createDate" th:value="*{createDate}">
+            <input id="updateDate" type="hidden" name="updateDate" th:value="*{updateDate}">
+            <input id="orgId" type="hidden" name="orgId" th:value="*{orgId}">
+            <input id="version" type="hidden" name="version" th:value="*{version}">
+
+            <fieldset>
+                <section>
+                    <label class="label">用户姓名</label>
+                    <label class="input">
+                        <i class="icon-prepend fa fa-user"></i>
+                        <input id="userName" type="text" name="userName" th:value="*{userName}" placeholder=""/>
+                        <b class="tooltip tooltip-bottom-right">请输入用户名</b>
+                    </label>
+                </section>
+
+                <section>
+                    <label class="label">密码</label>
+                    <label class="input">
+                        <i class="icon-prepend fa fa-lock"></i>
+                        <input id="password" type="password" name="password" th:if="*{isNew}"/>
+                        <input id="password" type="password" name="password" disabled th:value="*{password}" th:unless="*{isNew}"/>
+                        <b class="tooltip tooltip-bottom-right">请输入密码</b>
+                    </label>
+                </section>
+
+                <section>
+                    <label class="label">确认密码</label>
+                    <label class="input">
+                        <i class="icon-prepend fa fa-lock"></i>
+                        <input type="password" name="confirmPassword" th:if="*{isNew}"/>
+                        <input type="password" name="confirmPassword" disabled th:value="*{password}" th:unless="*{isNew}"/>
+                        <b class="tooltip tooltip-bottom-right">请再次输入密码</b>
+                    </label>
+                </section>
+
+                <section>
+                    <label class="label">启用
+                        <label class="checkbox">
+                            <input type="checkbox" name="enable">
+                            <i></i>是否启用</label></label>
+                </section>
+
+                <section>
+                    <label class="label">用户角色</label>
+                    <!-- widget div-->
+                    <div>
+                        <!-- widget content -->
+                        <div class="widget-body no-padding">
+
+                            <table
+                                   class="display table table-striped table-bordered table-hover"
+                                   cellspacing="0" width="100%">
+                                <thead>
+                                <tr>
+                                    <th>序号</th>
+                                    <th>角色名称</th>
+                                    <th>角色编号</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="role,roleStat:${roles}">
+                                        <td th:text="${roleStat.index} + 1"></td>
+                                        <td th:text="${role.roleName}"></td>
+                                        <td th:text="${role.roleId}"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <!-- end widget content -->
+                    </div>
+                    <!-- end widget div -->
+                </section>
+            </fieldset>
+        </form>
+
+        <script>
+        </script>
+
+    </div>
+
+</body>
+</html>

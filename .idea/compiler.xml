@@ -6,6 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="bss-common" />
+        <module name="bss-dict" />
+        <module name="bss-employee" />
         <module name="bss-server" />
       </profile>
     </annotationProcessing>
