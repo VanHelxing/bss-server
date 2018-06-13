@@ -27,7 +27,7 @@ public class BaseEntity implements Serializable {
 
     /** 唯一ID */
     @Id
-    @GenericGenerator(name = "twitter-id", strategy = "cn.zhimadi.txs.common.pojo.TwitterIdGennerate")
+    @GenericGenerator(name = "twitter-id", strategy = "cn.zhimadi.bss.common.pojo.TwitterIdGennerate")
     @GeneratedValue(generator = "twitter-id")
     private String id;
 

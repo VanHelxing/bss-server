@@ -5,6 +5,7 @@ import cn.zhimadi.bss.common.search.SearchResponse;
 import cn.zhimadi.bss.common.web.controller.BaseController;
 import cn.zhimadi.bss.dict.dto.DictDTO;
 import cn.zhimadi.bss.dict.entity.Dict;
+import cn.zhimadi.bss.dict.entity.ResourceTree;
 import cn.zhimadi.bss.dict.service.DictService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +89,27 @@ public class DictController extends BaseController {
             dtos.add(dto);
         }
         return dtos;
+    }
+
+
+    /**
+     *
+     * @return
+     */
+    @PostMapping("tree")
+    @ResponseBody
+    public Object zTreeTest(){
+
+        List<ResourceTree> trees = new ArrayList<>();
+        trees.add(new ResourceTree(1, 0, "公司", "", 1, 0, "", ""));
+        trees.add(new ResourceTree(11, 1,"超级管理员", "", 0, 0, "", "mainF"));
+        trees.add(new ResourceTree(111, 11, "显示报表", "http://localhost:8080/InspurUser/chart/index.jsp", 0, 0, "", "mainF"));
+        trees.add(new ResourceTree(112, 11, "管理用户", "http://localhost:8080/InspurUser/DirectTo?method=toUserManager", 0, 0, "", "mainF"));
+        trees.add(new ResourceTree(12, 1, "普通用户", "", 0, 0, "", "mainF"));
+        trees.add(new ResourceTree(121, 12, "跳转到Google", "http://www.google.com", 0, 0, "", "mainF"));
+        trees.add(new ResourceTree(122, 12, "叶子结点2", "", 0, 0, "", "mainF"));
+
+        return trees;
     }
 
 }
