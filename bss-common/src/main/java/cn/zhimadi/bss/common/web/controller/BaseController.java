@@ -23,13 +23,31 @@ import java.util.Date;
 @Controller
 public class BaseController {
 
+    /**
+     * logger
+     */
     private static Logger logger = LogManager.getLogger(BaseController.class);
 
+    /**
+     * PARAM_DRAW
+     */
     protected static String PARAM_DRAW = "draw";
+    /**
+     * PARAM_RECORDS_TOTAL
+     */
     protected static String PARAM_RECORDS_TOTAL = "recordsTotal";
+    /**
+     * PARAM_RECORDS_FILTERED
+     */
     protected static String PARAM_RECORDS_FILTERED = "recordsFiltered";
+    /**
+     * PARAM_DATA
+     */
     protected static String PARAM_DATA = "data";
 
+    /**
+     * PARAM_DTO
+     */
     protected static String PARAM_DTO = "dto";
 
 
@@ -95,6 +113,16 @@ public class BaseController {
     }
 
     /**
+     * 获取明细页面路径
+     * @param clazz
+     * @param prefix
+     * @return
+     */
+    public static String getDetailPagePath(Class clazz, String prefix){
+        return getPagePath(clazz, prefix, "list_detail");
+    }
+
+    /**
      * 获取Edit页面路径
      *
      * @param clazz  the clazz
@@ -104,6 +132,17 @@ public class BaseController {
      */
     public static String getEditPagePath(Class clazz, String prefix) {
         return getPagePath(clazz, prefix, "edit");
+    }
+
+
+    /**
+     * 获取明细页面路径
+     * @param clazz
+     * @param prefix
+     * @return
+     */
+    public static String getEditDetailPagePath(Class clazz, String prefix){
+        return getPagePath(clazz, prefix, "edit_detail");
     }
 
     /**

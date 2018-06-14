@@ -8,9 +8,9 @@ import lombok.Data;
 @Data
 public class ResourceTree {
 
-    private Integer id;
+    private String id;
 
-    private Integer pId;
+    private String pId;
 
     private String name;
 
@@ -24,7 +24,7 @@ public class ResourceTree {
 
     private String target;
 
-    public ResourceTree(Integer id, Integer pId, String name, String url, Integer open, Integer isHidden, String title, String target) {
+    public ResourceTree(String id, String pId, String name, String url, Integer open, Integer isHidden, String title, String target) {
         this.id = id;
         this.pId = pId;
         this.name = name;

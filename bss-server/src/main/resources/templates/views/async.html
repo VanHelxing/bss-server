@@ -15,13 +15,12 @@
                 simpleData: {
                     enable: true,
                     idKey: "id",
-                    pIdKey: "pId",
+                    pIdKey: "pid",
                     rootPId: 0
                 }
             },
 			async: {
 				enable: true,
-//				url:"../asyncData/getNodes.php",
 				url:"http://localhost:8080/dict/dict/tree",
 				autoParam:["id", "name=n", "level=lv"],
 				otherParam:{"otherParam":"zTreeAsyncTest"},

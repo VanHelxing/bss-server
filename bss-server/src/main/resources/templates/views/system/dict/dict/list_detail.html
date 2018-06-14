@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>明细页面</title>
+</head>
+<body>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            &times;
+        </button>
+        <h4 class="modal-title" id="myModalLabel" th:text="${'字典明细(' + dictType + ')'}"></h4>
+
+        <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false" data-widget-deletebutton="false">
+            <header>
+                <div class="jarviswidget-ctrls oprate-box" style="float: left" data-placement="left" role="menu">
+                    <a id="create-detail" class="btn btn-sm" rel="tooltip" title="" th:text="#{common.create}">
+                    </a>
+                    <a href="javascript:void(0);" id="update-detail" class="btn btn-sm" rel="tooltip" title="" th:text="#{common.update}">
+                    </a>
+                    <a href="javascript:void(0);" id="delete-detail" class="btn btn-sm" rel="tooltip" title="" th:text="#{common.delete}">
+                    </a>
+                </div>
+            </header>
+        </div>
+    </div>
+
+
+    <div class="modal-body no-padding">
+
+        <div class="smart-form">
+
+            <fieldset>
+                <section>
+                    <!-- widget div-->
+                    <div>
+                        <!-- widget content -->
+                        <div class="widget-body no-padding">
+
+                            <table id="detail-table"
+                                    class="display table table-striped table-bordered table-hover"
+                                    cellspacing="0" width="100%">
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="select_all"/></th>
+                                    <th hidden="hidden">编号</th>
+                                    <th hidden="hidden">字典类型</th>
+                                    <th>序号</th>
+                                    <th>节点编号</th>
+                                    <th>节点值</th>
+                                    <th>备注</th>
+                                    <th>更新时间</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="dto,dtoStat:${dtos}">
+                                    <td><input type="checkbox" id="select"></td>
+                                    <td id="id" hidden="hidden" th:text="${dto.id}"></td>
+                                    <td id="dictType" hidden="hidden" th:text="*{dto.dictType}"></td>
+                                    <td id="no" th:text="*{dto.no}"></td>
+                                    <td id="treeCode" th:text="*{dto.treeCode}"></td>
+                                    <td id="treeValue" th:text="*{dto.treeValue}"></td>
+                                    <td id="remark" th:text="*{dto.remark}"></td>
+                                    <td id="updateDate" th:text="*{dto.updateDate}"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <!-- end widget content -->
+                    </div>
+                    <!-- end widget div -->
+                </section>
+            </fieldset>
+        <div/>
+
+        <script type="text/javascript" th:inline="javascript">
+
+            var selected = [];
+
+            //选择条目
+            $('#detail-table tbody').unbind('click').on('click', 'tr', function () {
+
+
+                var id = $(this).children("td#id").text();
+
+                //判断id是否已经在selected中
+                var index = $.inArray(id, selected);
+
+                if (index === -1) {
+                    selected.push(id);
+                } else {
+                    //从数组中删除索引id
+                    selected.splice(index, 1);
+                }
+            });
+
+
+            //添加
+            $("#create-detail").unbind('click').click(function () {
+                createFunction("#modal", /*[[@{dict/dict/createDetail}]]*/);
+                $("#btn-submit").unbind().click(function () {
+                    saveDetail();
+                })
+            });
+
+            //更新
+            $("#update-detail").unbind('click').click(function () {
+                updateFunction("#modal", /*[[@{dict/dict/updateDetail}]]*/, selected);
+                $("#btn-submit").unbind().click(function () {
+                    saveDetail();
+                })
+            });
+
+            //删除
+            $("#delete-detail").click(function () {
+                deleteFunction("#modal", /*[[@{dict/dict/deleteDetail}]]*/, selected);
+            });
+
+
+            function saveDetail() {
+                var errorClass = 'invalid';
+                var errorElement = 'em';
+
+                var $checkoutForm = $('#data-form').validate({
+                    errorClass: errorClass,
+                    errorElement: errorElement,
+                    highlight: function (element) {
+                        $(element).parent().removeClass('state-success').addClass("state-error");
+                        $(element).removeClass('valid');
+                    },
+                    unhighlight: function (element) {
+                        $(element).parent().removeClass("state-error").addClass('state-success');
+                        $(element).addClass('valid');
+                    },
+                    rules: {
+                        dictType: {
+                            required: true,
+                            minlength: 1
+                        },
+                        no: {
+                            required: true
+                        },
+                        treeCode: {
+                            required: true,
+                            minlength: 4
+                        },
+                        treeValue: {
+                            required: true,
+                            minlength: 1
+                        }
+                    },
+                    messages: {
+                        dictType: {
+                            required: '字典类型不能为空!',
+                            minlength: '字典类型长度至少为1位!'
+                        },
+                        no: {
+                            required: '序号不能为空!'
+                        },
+                        treeCode: {
+                            required: '节点编号不能为空!',
+                            minlength: '节点编号长度至少为1位!'
+                        },
+                        treeValue: {
+                            required: '节点值不能为空!',
+                            minlength: '节点值长度至少为1位!'
+                        }
+                    },
+                    // Do not change code below
+                    errorPlacement: function (error, element) {
+                        error.insertAfter(element.parent());
+                    }
+                });
+                if ($checkoutForm.form()) {
+                    ajaxSave()
+                }
+            }
+
+        </script>
+
+    </div>
+
+</body>
+</html>

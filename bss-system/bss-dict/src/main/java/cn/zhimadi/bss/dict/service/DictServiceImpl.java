@@ -24,4 +24,17 @@ public class DictServiceImpl extends BaseServiceImpl<Dict> implements DictServic
     protected BaseDao<Dict> getDao() {
         return dictDao;
     }
+
+
+    /**
+     * Find by dict dictType.
+     *
+     * @param dictType the dict type
+     * @return the dict
+     * @author : yangjunqing / 2018-06-14
+     */
+    @Override
+    public Dict findByDictType(String dictType) {
+        return dictDao.findByDictType(dictType);
+    }
 }

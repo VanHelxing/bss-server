@@ -37,4 +37,11 @@ public class Constants {
      */
     public final static String REQUEST_API = "api";
     public final static String REQUEST_SYSTEM = "system";
+
+    /**
+     * 请求操作方式
+     */
+    public final static String DTO_ADD = "0";
+    public final static String DTO_UPDATE = "1";
+    public final static String DTO_DELETE = "2";
 }

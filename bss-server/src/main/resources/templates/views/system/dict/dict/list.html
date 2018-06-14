@@ -2,16 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>数据字典</title>
+    <link rel="stylesheet" type="text/css" media="screen" th:href="@{resource/css/default.css}">
 </head>
 <body>
     <div class="row">
         <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
             <h1 class="page-title txt-color-blueDark">
                 <i class="fa fa-lg fa-fw fa-home"></i>
-                <!--<span th:text="${moduleName}"></span>-->
-                <!--<span th:text="${entityMessage}"></span>-->
-                <!--<span th:text="${entityMessage}"></span>-->
-                <span>系统管理>字典管理>字典列表</span>
+                <span th:text="#{${moduleName} + '.title'}"></span>
+                <span th:text="#{${entityMessage} + '.title'}"></span>
+                <span th:text="#{${entityMessage} + '.list'}"></span>
             </h1>
         </div>
     </div>
@@ -28,16 +28,15 @@
                 <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false" data-widget-deletebutton="false">
                     <header>
                         <div class="jarviswidget-ctrls oprate-box" style="float: left" data-placement="left" role="menu">
-                            <a id="create" class="btn btn-sm" rel="tooltip" title="">
-                                新增
+                            <a id="create" class="btn btn-sm" rel="tooltip" title="" th:text="#{common.create}">
                             </a>
-                            <a href="javascript:void(0);" id="update" class="btn btn-sm" rel="tooltip" title="">
-                                更新
-                            <a href="javascript:void(0);" id="delete" class="btn btn-sm" rel="tooltip" title="">
-                                删除
+                            <a href="javascript:void(0);" id="update" class="btn btn-sm" rel="tooltip" title="" th:text="#{common.update}">
                             </a>
-                            <a href="javascript:void(0);" id="refresh" class="btn btn-sm" rel="tooltip" title="">
-                                刷新
+                            <a href="javascript:void(0);" id="delete" class="btn btn-sm" rel="tooltip" title="" th:text="#{common.delete}">
+                            </a>
+                            <a href="javascript:void(0);" id="refresh" class="btn btn-sm" rel="tooltip" title="" th:text="#{common.refresh}">
+                            </a>
+                            <a href="javascript:void(0);" id="detail" class="btn btn-sm" rel="tooltip" title="" th:text="#{dict.dict.detail}">
                             </a>
                         </div>
                     </header>
@@ -78,8 +77,8 @@
 
     <!-- MODAL PLACE HOLDER -->
     <div id="modal" class="modal fade" role="dialog" aria-labelledby="modal-label"
-         data-backdrop="static" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+         data-backdrop="static" aria-hidden="true" style="z-index: 9999">
+        <div class="modal-dialog" role="document">*
             <div id="modal-container">
                 <div class="modal-content" id="modal-content">
                 </div>
@@ -93,6 +92,24 @@
         </div>
     </div>
     <!-- END MODAL -->
+
+    <!-- MODAL DETAIL-->
+    <div id="modal-detail" class="modal fade" role="dialog" aria-labelledby="modal-label"
+         data-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div id="modal-container-detail">
+                <div class="modal-content" id="modal-content-detail">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END MODAL -->
+
+
 
     <script type="text/javascript" th:inline="javascript">
 
@@ -198,7 +215,7 @@
 
             //添加
             $("#create").unbind('click').click(function () {
-                createFunction("#modal", /*[[@{security/user/create}]]*/);
+                createFunction("#modal", /*[[@{dict/dict/create}]]*/);
                 $("#btn-submit").unbind().click(function () {
                     save();
                 })
@@ -206,14 +223,23 @@
 
             //更新
             $("#update").unbind('click').click(function () {
-                updateFunction("#modal", /*[[@{security/user/update}]]*/, selected);
+                updateFunction("#modal", /*[[@{dict/dict/update}]]*/, selected);
                 $("#btn-submit").unbind().click(function () {
                     save();
                 })
             });
+
             //删除
             $("#delete").click(function () {
-                deleteFunction("#modal", /*[[@{security/user/delete}]]*/, selected);
+                deleteFunction("#modal", /*[[@{dict/dict/delete}]]*/, selected);
+            });
+
+            //明细
+            $("#detail").click(function () {
+                detailFunction("#modal-detail", /*[[@{dict/dict/detail}]]*/, selected);
+                $("#btn-submit").unbind().click(function () {
+                    save();
+                })
             });
 
             function save() {
@@ -232,32 +258,23 @@
                         $(element).addClass('valid');
                     },
                     rules: {
-                        userName: {
+                        dictName: {
                             required: true,
                             minlength: 1
                         },
-                        password: {
+                        dictType: {
                             required: true,
-                            minlength: 6,
-                        },
-                        confirmPassword: {
-                            required: true,
-                            minlength: 6,
-                            equalTo: "#password"
+                            minlength: 1,
                         }
                     },
                     messages: {
-                        userName: {
-                            required: '用户名不能为空!',
-                            minlength: '用户名长度至少为1位!'
+                        dictName: {
+                            required: '字典名称不能为空!',
+                            minlength: '字典名称长度至少为1位!'
                         },
-                        password: {
-                            required: '用户密码不能为空!',
-                            minlength: '用户密码长度至少为6位!'
-                        },
-                        confirmPassword: {
-                            required: '请再一次输入密码!',
-                            equalTo: '两次密码不相同!'
+                        dictType: {
+                            required: '字典类型不能为空!',
+                            minlength: '字典类型长度至少为1位!'
                         }
                     },
                     // Do not change code below

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>明细编辑页面</title>
+</head>
+<body>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            &times;
+        </button>
+        <h4 class="modal-title" id="myModalLabel">明细编辑</h4>
+    </div>
+
+    <div class="modal-body no-padding">
+
+        <form th:action="@{dict/dict/saveDetail}" id="data-form" method="post" th:object="${dto}" class="smart-form">
+            <input id="id" type="hidden" name="id" th:value="*{id}">
+            <input id="version" type="hidden" name="version" th:value="*{version}">
+
+            <fieldset>
+                <section>
+                    <label class="label">字典类型</label>
+                    <label class="input">
+                        <i class="icon-prepend fa fa-user"></i>
+                        <input id="dictType" type="text" name="dictType" th:value="*{dictType}"/>
+                    </label>
+                </section>
+
+                <section>
+                    <label class="label">序号</label>
+                    <label class="input">
+                        <i class="icon-prepend fa fa-lock"></i>
+                        <input id="no" type="number" min="0" max="99" name="no" th:value="*{no}" placeholder=""/>
+                        <b class="tooltip tooltip-bottom-right">请输入序号</b>
+                    </label>
+                </section>
+
+                <section>
+                    <label class="label">节点编号</label>
+                    <label class="input">
+                        <i class="icon-prepend fa fa-lock"></i>
+                        <input id="treeCode" type="text" name="treeCode" th:value="*{treeCode}" placeholder=""/>
+                        <b class="tooltip tooltip-bottom-right">请输入节点编号</b>
+                    </label>
+                </section>
+
+                <section>
+                    <label class="label">节点值</label>
+                    <label class="input">
+                        <i class="icon-prepend fa fa-lock"></i>
+                        <input id="treeValue" type="text" name="treeValue" th:value="*{treeValue}" placeholder=""/>
+                        <b class="tooltip tooltip-bottom-right">请输入节点值</b>
+                    </label>
+                </section>
+
+                <section>
+                    <label class="label">备注</label>
+                    <label class="input">
+                        <i class="icon-prepend fa fa-lock"></i>
+                        <input id="remark" type="text" name="remark" th:value="*{remark}" placeholder=""/>
+                        <b class="tooltip tooltip-bottom-right">请输入备注</b>
+                    </label>
+                </section>
+
+            </fieldset>
+        </form>
+
+        <script>
+        </script>
+
+    </div>
+</body>
+</html>
