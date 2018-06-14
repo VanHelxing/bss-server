@@ -8,5 +8,6 @@
     <file url="file://$PROJECT_DIR$/bss-server" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/bss-system" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/bss-system/bss-dict" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bss-system/bss-security" charset="UTF-8" />
   </component>
 </project>

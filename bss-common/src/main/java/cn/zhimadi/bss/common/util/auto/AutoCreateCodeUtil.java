@@ -24,7 +24,7 @@ public class AutoCreateCodeUtil {
 
 
     //工作区路径(请核对自己的工作区目录)
-    private final static String WORKSPACE_PATH = "D:/workspace/bss-server";
+    private final static String WORKSPACE_PATH = "D:/myworkspace/bss-server";
 
     //模板目录
     private final static String TEMPLATE_PATH = WORKSPACE_PATH + "/bss-common/src/main/resources/freemarker";
@@ -44,15 +44,15 @@ public class AutoCreateCodeUtil {
     private final static String AUTHOR_NAME = "yangjunqing";
 
     /** module name (支持多层, 例如bss-system.bss-security)* */
-    private final static String MODULE_NAME = "bss-system.bss-dict";
+    private final static String MODULE_NAME = "bss-system.bss-security";
 
     /** package name (支持多层, 例如security.user) */
-    private final static String PACKAGE_NAME = "dict";
+    private final static String PACKAGE_NAME = "security";
 
     /** 实体类名称 */
-    private final static String ENTITY_NAME = "DictDetail";
+    private final static String ENTITY_NAME = "Resource";
     /** 实体类描述 */
-    private final static String ENTITY_DESCRIPTION = "字典明细";
+    private final static String ENTITY_DESCRIPTION = "功能菜单";
 
 
     private Configuration cfg;

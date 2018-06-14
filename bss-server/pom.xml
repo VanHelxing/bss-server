@@ -26,6 +26,12 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
+        <dependency>
+            <groupId>cn.zhimadi.bss</groupId>
+            <artifactId>bss-security</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
         <!-- Thymeleaf -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
