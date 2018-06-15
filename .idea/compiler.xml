@@ -9,6 +9,8 @@
         <module name="bss-common" />
         <module name="bss-dict" />
         <module name="bss-employee" />
+        <module name="bss-security" />
+        <module name="bss-server" />
         <module name="bss-server (1)" />
         <module name="bsssecurity" />
       </profile>

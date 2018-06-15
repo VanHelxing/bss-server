@@ -1,5 +1,8 @@
 package cn.zhimadi.bss.security.web;
 
+import cn.zhimadi.bss.common.exception.CustomException;
+import cn.zhimadi.bss.common.pojo.ResponseData;
+import cn.zhimadi.bss.common.util.StringUtils;
 import cn.zhimadi.bss.common.web.controller.BaseController;
 import cn.zhimadi.bss.security.dto.ResourceDTO;
 import cn.zhimadi.bss.security.entity.Resource;
@@ -8,10 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +53,6 @@ public class ResourceController extends BaseController {
     }
 
 
-
     /**
      * Entity转DTO
      *
@@ -69,6 +68,65 @@ public class ResourceController extends BaseController {
             dtos.add(dto);
         }
         return dtos;
+    }
+
+
+    /**
+     * 新增
+     * @param pid
+     * @param name
+     * @return
+     */
+    @PostMapping("add")
+    @ResponseBody
+    public ResponseData add(@RequestParam("pid")String pid, @RequestParam("name")String name){
+        if (StringUtils.isEmpty(pid) || StringUtils.isEmpty(name)){
+            throw new CustomException("父编号或者资源名称不能为空!");
+        }
+
+        Resource resource= new Resource();
+        resource.setName(name);
+        resource.setPId(pid);
+        resource = resourceService.save(resource);
+        return ResponseData.ok(resource);
+    }
+
+
+    /**
+     * 更新
+     * @param id
+     * @param name
+     * @return
+     */
+    @PostMapping("update")
+    @ResponseBody
+    public ResponseData update(@RequestParam("id")String id, @RequestParam("name")String name){
+        if (StringUtils.isEmpty(id) || StringUtils.isEmpty(name)){
+            throw new CustomException("编号或者资源名称不能为空!");
+        }
+
+        Resource resource = resourceService.findById(id);
+        resource.setName(name);
+        resourceService.save(resource);
+        return ResponseData.ok();
+    }
+
+
+    /**
+     * 删除
+     *
+     * @param id the id
+     * @return the response data
+     * @author : yangjunqing / 2018-06-14
+     */
+    @PostMapping("delete")
+    @ResponseBody
+    public ResponseData delete(String id){
+        //根据id数组查询对象
+        Resource resource = resourceService.findById(id);
+        //删除对象
+        resourceService.delete(resource);
+        return ResponseData.ok();
     }
 
 }

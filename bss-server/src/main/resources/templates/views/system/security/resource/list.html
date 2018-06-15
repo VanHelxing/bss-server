@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <title>功能菜单</title>
 
-    <link rel="stylesheet" th:href="@{resource/js/zTree_v3-3.5.28/css/zTreeStyle/zTreeStyle.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{resource/js/zTree_v3/css/zTreeStyle/zTreeStyle.css}" type="text/css">
     <script type="text/javascript" th:src="@{resource/js/jquery-3.3.1.min.js}"></script>
-    <script type="text/javascript" th:src="@{resource/js/zTree_v3-3.5.28/js/jquery.ztree.core.js}"></script>
-    <script type="text/javascript" th:src="@{resource/js/zTree_v3-3.5.28/js/jquery.ztree.excheck.js}"></script>
-      <script type="text/javascript" th:src="@{resource/js/zTree_v3-3.5.28/js/jquery.ztree.exedit.js}"></script>
+    <script type="text/javascript" th:src="@{resource/js/zTree_v3/js/jquery.ztree.core.js}"></script>
+    <script type="text/javascript" th:src="@{resource/js/zTree_v3/js/jquery.ztree.excheck.js}"></script>
+    <script type="text/javascript" th:src="@{resource/js/zTree_v3/js/jquery.ztree.exedit.js}"></script>
 </head>
 <body>
     <div class="row">
@@ -33,26 +33,18 @@
     <script type="text/javascript" th:inline="javascript">
         var setting = {
             view: {
-                addHoverDom: addHoverDom,
-                removeHoverDom: removeHoverDom,
-                selectedMulti: false
+                addHoverDom: addHoverDom,       // 用于当鼠标移动到节点上时，显示用户自定义控件。
+                removeHoverDom: removeHoverDom, // 用于当鼠标移出节点时，隐藏用户自定义控件。
+                selectedMulti: false,          //是否允许同时选中多个节点。
+                dblClickExpand: false          //双击节点时，是否自动展开父节点的标识
             },
             edit: {
                 enable: true,
-                editNameSelectAll: true,
-                showRemoveBtn: showRemoveBtn,
-                showRenameBtn: showRenameBtn
-            },
-            callback: {
-                beforeDrag: beforeDrag,
-                beforeEditName: beforeEditName,
-                beforeRemove: beforeRemove,
-                beforeRename: beforeRename,
-                onRemove: onRemove,
-                onRename: onRename
+                editNameSelectAll: true,        //设置节点编辑名称 input 初次显示时，txt内容为全选状态
+                removeTitle: "删除",            // 删除按钮的 Title 辅助信息
+                renameTitle: "修改"             // 编辑名称按钮的 Title 辅助信息。
             },
             data: {
-
                 simpleData: {
                     enable: true,
                     idKey: "id",
@@ -66,6 +58,11 @@
                 autoParam:["id", "name=n", "level=lv"],
                 otherParam:{"otherParam":"zTreeAsyncTest"},
                 dataFilter: filter
+            },
+            callback: {
+                // beforeEditName: beforeEditName, // 用于捕获节点编辑按钮的 click 事件，并且根据返回值确定是否允许进入名称编辑状态
+                beforeRemove: beforeRemove,     // 用于捕获节点被删除之前的事件回调函数，并且根据返回值确定是否允许删除操作
+                beforeRename: beforeRename     // 用于捕获节点编辑名称结束（Input 失去焦点 或 按下 Enter 键）之后，更新节点名称数据之前的事件回调函数，并且根据返回值确定是否允许更改名称的操作
             }
         };
 
@@ -77,11 +74,12 @@
             return childNodes;
         };
 
+
         var log, className = "dark";
-        function beforeDrag(treeId, treeNodes) {
-            return false;
-        }
-        function beforeEditName(treeId, treeNode) {
+        var rootNum = 0;
+
+        //在进行重命名之前，进行一下确认
+        function beforeEditName(treeId, treeNode){
             className = (className === "dark" ? "":"dark");
             showLog("[ "+getTime()+" beforeEditName ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
             var zTree = $.fn.zTree.getZTreeObj("resourceTree");
@@ -94,76 +92,113 @@
                 }
             }, 0);
             return false;
-        }
-        function beforeRemove(treeId, treeNode) {
+        };
+
+        //删除操作
+        function beforeRemove(treeId, treeNode){
             className = (className === "dark" ? "":"dark");
-            showLog("[ "+getTime()+" beforeRemove ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
             var zTree = $.fn.zTree.getZTreeObj("resourceTree");
             zTree.selectNode(treeNode);
-            return confirm("确认删除 节点 -- " + treeNode.name + " 吗？");
-        }
-        function onRemove(e, treeId, treeNode) {
-            showLog("[ "+getTime()+" onRemove ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
-        }
-        function beforeRename(treeId, treeNode, newName, isCancel) {
-            className = (className === "dark" ? "":"dark");
-            showLog((isCancel ? "<span style='color:red'>":"") + "[ "+getTime()+" beforeRename ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name + (isCancel ? "</span>":""));
-            if (newName.length == 0) {
-                setTimeout(function() {
-                    var zTree = $.fn.zTree.getZTreeObj("resourceTree");
-                    zTree.cancelEditName();
-                    alert("节点名称不能为空.");
-                }, 0);
+            var isDel = confirm("确认删除该资源 -- " + treeNode.name + "吗?");
+
+            var isDeled = false;
+            if (isDel){
+                $.ajax({
+                    type: "POST",
+                    async: false,
+                    url: /*[[@{security/resource/delete}]]*/,
+                    data: {
+                        id: treeNode.id
+                    },
+                    success: function (result) {
+                        if (result.success){
+                            isDeled = true;
+                        }else {
+                            $.sobox.alert('系统提示', '操作失败!');
+                            isDeled = false;
+                        }
+                    }
+                });
+                return isDeled;
+            } else {
                 return false;
             }
-            return true;
-        }
-        function onRename(e, treeId, treeNode, isCancel) {
-            showLog((isCancel ? "<span style='color:red'>":"") + "[ "+getTime()+" onRename ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name + (isCancel ? "</span>":""));
-        }
-        function showRemoveBtn(treeId, treeNode) {
-            return !treeNode.isFirstNode;
-        }
-        function showRenameBtn(treeId, treeNode) {
-            return !treeNode.isLastNode;
-        }
-        function showLog(str) {
-            if (!log) log = $("#log");
-            log.append("<li class='"+className+"'>"+str+"</li>");
-            if(log.children("li").length > 8) {
-                log.get(0).removeChild(log.children("li")[0]);
-            }
-        }
-        function getTime() {
-            var now= new Date(),
-                h=now.getHours(),
-                m=now.getMinutes(),
-                s=now.getSeconds(),
-                ms=now.getMilliseconds();
-            return (h+":"+m+":"+s+ " " +ms);
         }
 
-        var newCount = 1;
-        function addHoverDom(treeId, treeNode) {
+
+        //重命名操作
+        function beforeRename(treeId, treeNode, newName, isCancel){
+            className = (className === "dark" ? "":"dark");
+            if (newName.length == 0){
+                $.sobox.alert('系统提示', '资源名称不能为空!');
+                var zTree = $.fn.zTree.getZTreeObj("resourceTree");
+                setTimeout(function () {
+                    zTree.editName(treeNode)
+                }, 10);
+                return false;
+            }
+            else {
+                var isDeled = false;
+                $.ajax({
+                    type: "POST",
+                    async: false,
+                    url: /*[[@{security/resource/update}]]*/,
+                    data:{
+                        id: treeNode.id,
+                        name: newName
+                    },
+                    success: function (result) {
+                        if (result.success){
+                            isDeled = true;
+                        }else {
+                            $.sobox.alert('系统提示', '操作失败!');
+                            isDeled = false;
+                        }
+                    }
+                });
+                return isDeled;
+            }
+        }
+
+        //新增
+        var newCount = 0;
+        function addHoverDom(treeId, treeNode){
             var sObj = $("#" + treeNode.tId + "_span");
             if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
             var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
-                + "' title='add node' onfocus='this.blur();'></span>";
+                + "' title='添加' onfocus='this.blur();'></span>";
             sObj.after(addStr);
             var btn = $("#addBtn_"+treeNode.tId);
+            var isAdded = false;
             if (btn) btn.bind("click", function(){
-                var zTree = $.fn.zTree.getZTreeObj("resourceTree");
-                zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name:"new node" + (newCount++)});
-                return false;
+                newCount++;
+                $.ajax({
+                    type: "POST",
+                    async: false,
+                    url: /*[[@{security/resource/add}]]*/,
+                    data: {
+                        name: "新资源" + newCount,
+                        pid: treeNode.id
+                    },
+                    success: function (result) {
+                        if (result.success){
+                            isAdded = true;
+                            var zTree = $.fn.zTree.getZTreeObj("resourceTree");
+                            zTree.addNodes(treeNode, {id:result.data.id, name:result.data.name });
+                        }else {
+                            isAdded = false;
+                            $.sobox.alert('系统提示', '操作失败!');
+                        }
+                    }
+                });
+                return isAdded;
             });
-        };
+        }
+
+        // 用于当鼠标移出节点时，隐藏用户自定义控件
         function removeHoverDom(treeId, treeNode) {
             $("#addBtn_"+treeNode.tId).unbind().remove();
         };
-        function selectAll() {
-            var zTree = $.fn.zTree.getZTreeObj("resourceTree");
-            zTree.setting.edit.editNameSelectAll =  $("#selectAll").attr("checked");
-        }
 
         $(document).ready(function(){
             $.fn.zTree.init($("#resourceTree"), setting);
